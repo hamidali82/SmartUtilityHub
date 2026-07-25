@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101b20" />
+  <meta name="application-name" content="Textile Utility MIS" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <title>Textile Utility Management Software</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="auth-shell" id="authShell">
+    <section class="login-card">
+      <div class="brand-mark"><span>TU</span></div>
+      <p class="eyebrow">Textile Sustainability Command Center</p>
+      <h1>Utility Management Software</h1>
+      <p class="muted">For towel, terry towel and bath textile manufacturing operations.</p>
+      <form id="loginForm" class="login-form hidden">
+        <label>Username <input id="loginUser" autocomplete="username" placeholder="Enter username" /></label>
+        <label>Password <input id="loginPass" type="password" autocomplete="current-password" placeholder="Enter password" /></label>
+        <button class="primary" type="submit">Secure Login</button>
+      </form>
+      <form id="signupForm" class="login-form">
+        <label>Full Name <input id="signupName" autocomplete="name" placeholder="Your name" /></label>
+        <label>Username <input id="signupUser" autocomplete="username" placeholder="Choose username" /></label>
+        <label>Password <input id="signupPass" type="password" autocomplete="new-password" placeholder="Choose password" /></label>
+        <label>Role
+          <select id="signupRole">
+            <option>Administrator</option>
+            <option>Environment Manager</option>
+            <option>Maintenance Manager</option>
+            <option>Production Manager</option>
+            <option>Read Only User</option>
+          </select>
+        </label>
+        <button class="primary" type="submit">Create Account</button>
+      </form>
+      <div class="auth-switch">
+        <button class="ghost hidden" id="showSignup" type="button">Back to sign up</button>
+        <button class="ghost" id="showLogin" type="button">Existing account login</button>
+      </div>
+      <div class="demo-users">
+        Create your company account to start. Demo credentials are disabled.
+      </div>
+    </section>
+    <aside class="auth-panel">
+      <div class="panel-stat"><b>20</b><span>Departments tracked</span></div>
+      <div class="panel-stat"><b>13</b><span>Reports exportable</span></div>
+      <div class="panel-stat"><b>3Y</b><span>Trend comparison</span></div>
+    </aside>
+  </div>
+
+  <div class="app-shell hidden" id="appShell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-row"><div class="brand-mark small"><span>TU</span></div><div><b>Textile Utility</b><small>Environmental MIS</small></div></div>
+      <nav id="nav">
+        <button data-view="dashboard" class="active">Dashboard</button>
+        <button data-view="entry">Monthly Entry</button>
+        <button data-view="reports">Reports</button>
+        <button data-view="alerts">Alerts</button>
+        <button data-view="audit">Audit Trail</button>
+        <button data-view="admin">Admin & Settings</button>
+      </nav>
+      <div class="sidebar-note">Automatic calculations: consumption, cost, intensity, carbon, rankings and target variance.</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn menu" id="menuBtn">☰</button>
+        <div>
+          <p class="eyebrow">Industrial resource intelligence</p>
+          <h2 id="pageTitle">Dashboard</h2>
+        </div>
+        <div class="top-actions">
+          <select id="periodMonth"></select>
+          <select id="periodYear"></select>
+          <span class="pill offline-pill" id="offlineStatus">Offline Ready</span>
+          <button class="ghost" id="installBtn">Install Offline App</button>
+          <button class="ghost" id="nameBtn">Change Name</button>
+          <button class="ghost" id="changesBtn">Changes Enabled</button>
+          <button class="ghost" id="themeBtn">Light Mode</button>
+          <button class="ghost" id="backupBtn">Backup</button>
+          <button class="danger" id="logoutBtn">Logout</button>
+        </div>
+      </header>
+
+      <section id="dashboard" class="view active-view">
+        <div class="hero-strip">
+          <div><p class="eyebrow">Executive overview</p><h3 id="heroTitle">Monthly Environmental Performance</h3></div>
+          <div class="score-ring"><canvas id="scoreGauge" width="140" height="140"></canvas><span id="scoreText">0</span></div>
+        </div>
+        <div class="kpi-grid" id="kpiGrid"></div>
+        <div class="chart-grid">
+          <article class="card chart-card wide"><div class="card-head"><h3>Monthly Utility Trend</h3><span>kWh · m³ · tCO₂e</span></div><canvas id="trendChart"></canvas></article>
+          <article class="card chart-card"><div class="card-head"><h3>Department Comparison</h3><span>Energy kWh</span></div><canvas id="deptChart"></canvas></article>
+          <article class="card chart-card"><div class="card-head"><h3>Utility Cost Analysis</h3><span>Monthly spend</span></div><canvas id="costChart"></canvas></article>
+          <article class="card chart-card"><div class="card-head"><h3>Three-Year Comparison</h3><span>Energy total</span></div><canvas id="yearChart"></canvas></article>
+          <article class="card chart-card"><div class="card-head"><h3>Target vs Actual</h3><span>Consumption control</span></div><canvas id="targetChart"></canvas></article>
+          <article class="card chart-card"><div class="card-head"><h3>Resource Mix</h3><span>Renewable & water reuse</span></div><canvas id="mixChart"></canvas></article>
+        </div>
+        <article class="card comparison-card">
+          <div class="card-head">
+            <div><h3>Three-Year Utility Comparison</h3><p class="muted">Annual comparison for electricity, water, natural gas, waste, carbon, intensity and renewable contribution.</p></div>
+            <span id="threeYearSummary">3-year view</span>
+          </div>
+          <div class="table-wrap"><table id="threeYearTable"></table></div>
+        </article>
+      </section>
+
+      <section id="entry" class="view">
+        <div class="workbench">
+          <div class="module-tabs" id="moduleTabs"></div>
+          <div class="card form-card">
+            <div class="card-head"><h3 id="moduleTitle">Energy Consumption</h3><span id="roleHint"></span></div>
+            <form id="entryForm" class="dynamic-form"></form>
+          </div>
+          <div class="card table-card">
+            <div class="table-toolbar">
+              <input id="entrySearch" placeholder="Search entries, department, vendor, month..." />
+              <button class="ghost" id="csvBtn">Export CSV</button>
+              <button class="ghost" id="excelBtn">Export Excel</button>
+              <button class="ghost" id="printBtn">Print / PDF</button>
+            </div>
+            <div class="table-wrap"><table id="entryTable"></table></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="reports" class="view">
+        <div class="report-layout">
+          <div class="card controls-card">
+            <h3>Professional Reports</h3>
+            <label>Report Type<select id="reportType"></select></label>
+            <label>Month<select id="reportMonth"></select></label>
+            <label>Year<select id="reportYear"></select></label>
+            <button class="primary" id="generateReportBtn">Generate Report</button>
+            <button class="ghost" id="reportCsvBtn">Export CSV</button>
+            <button class="ghost" id="reportExcelBtn">Export Excel</button>
+            <button class="ghost" id="reportPrintBtn">Print / PDF</button>
+          </div>
+          <article class="card report-card" id="reportCanvas"></article>
+        </div>
+      </section>
+
+      <section id="alerts" class="view"><div class="card"><div class="card-head"><h3>Alerts & Notifications</h3><span>Threshold and data-quality checks</span></div><div id="alertsList" class="alert-list"></div></div></section>
+      <section id="audit" class="view"><div class="card"><div class="card-head"><h3>Audit Trail</h3><span>Every modification logged</span></div><div class="table-wrap"><table id="auditTable"></table></div></div></section>
+      <section id="admin" class="view">
+        <div class="settings-grid">
+          <div class="card"><h3>User Login & Role Management</h3><div id="userList" class="user-list"></div></div>
+          <div class="card"><h3>Emission Factors</h3><form id="factorForm" class="factor-form"></form></div>
+          <div class="card"><h3>Targets & Data</h3><p class="change-note">Use the “Changes Enabled” control in the top bar to allow or lock edits for any month, year, and historical entry.</p><p class="change-note">Offline mode: install this app once, then use it without internet. Your entries, users, reports and backups stay on this device until you export or restore data.</p><form id="targetForm" class="factor-form"></form><div class="button-row"><label class="file-btn">Restore Backup<input type="file" id="restoreInput" accept="application/json" /></label><button class="danger" id="resetBtn">Reset Demo Data</button></div></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
